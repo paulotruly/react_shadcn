@@ -12,7 +12,7 @@ function Dashboard() {
       }
     }, [token, navigate])
   
-    if (token) {
+    if (!token) {
       return null
     }
 

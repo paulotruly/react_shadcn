@@ -39,10 +39,6 @@ export function LoginForm({
     }
   }, [token, navigate])
 
-  if (token) {
-    return null
-  }
-
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
