@@ -1,9 +1,14 @@
-import { LoginForm } from "./components/login-form"
+import { Route, Routes } from "react-router-dom"
+import Login from "./Login"
+import Home from "./Home"
 
 function App() {
   return (
     <>
-      <LoginForm></LoginForm>
+    <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/login" element={<Login/>}/>
+    </Routes>
     </>
   )
 }

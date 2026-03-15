@@ -1,3 +1,5 @@
+import type { AuthResponse } from "@/types/types"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,12 +16,42 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useState } from "react"
 
 export function LoginForm({
+
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+
+    const response = await fetch("https://dummyjson.com/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        username: username,
+        password: password,
+        expiresInMins: 30,
+      }),
+    })
+
+    const data: AuthResponse = await response.json()
+
+    if (response.ok) {
+      console.log("Login successful: ", data)
+    } else {
+      console.error("Login failed: ", data)
+    }
+  }
+
   return (
+
+
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
@@ -29,14 +61,16 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="john_doe"
                   required
                 />
               </Field>
@@ -50,7 +84,12 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                type="password"
+                required />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
@@ -66,5 +105,7 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
+
+
   )
 }
