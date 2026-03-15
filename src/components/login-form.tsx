@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 import type { AuthResponse } from "@/types/types"
 
 import { cn } from "@/lib/utils"
@@ -24,8 +26,22 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
 
+  const token = localStorage.getItem("accessToken")
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard", { replace: true })
+    }
+  }, [token, navigate])
+
+  if (token) {
+    return null
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -44,6 +60,8 @@ export function LoginForm({
 
     if (response.ok) {
       console.log("Login successful: ", data)
+      localStorage.setItem("accessToken", data.accessToken)
+      navigate("/dashboard")
     } else {
       console.error("Login failed: ", data)
     }
