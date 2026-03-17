@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import type { AuthResponse } from "@/types/types"
 
@@ -35,7 +35,7 @@ export function LoginForm({
 
   useEffect(() => {
     if (token) {
-      navigate("/dashboard", { replace: true })
+      navigate({ to: '/dashboard', replace: true })
     }
   }, [token, navigate])
 
@@ -57,7 +57,7 @@ export function LoginForm({
     if (response.ok) {
       console.log("Login successful: ", data)
       localStorage.setItem("accessToken", data.accessToken)
-      navigate("/dashboard")
+      navigate({ to: '/dashboard' })
     } else {
       console.error("Login failed: ", data)
     }
