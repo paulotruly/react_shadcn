@@ -1,3 +1,4 @@
+import { getToken, setToken } from "@/lib/cookies"
 import { useAuth } from "@/context/AuthContext"
 import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
@@ -26,7 +27,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
 
-  const token = localStorage.getItem("accessToken")
+  const token = getToken()
 
   const { login } = useAuth()
   const [username, setUsername] = useState("")
@@ -57,7 +58,7 @@ export function LoginForm({
 
     if (response.ok) {
       login(data)
-      localStorage.setItem("accessToken", data.accessToken)
+      setToken(data.accessToken)
       navigate({ to: '/dashboard' })
     } else {
       console.error("Login failed: ", data)

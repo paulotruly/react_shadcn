@@ -1,12 +1,13 @@
 import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import { useAuth } from "./context/AuthContext"
+import { getToken, removeToken } from "./lib/cookies"
 
 function Dashboard() {
 
   const { logout } = useAuth()
   const navigate = useNavigate()
-  const token = localStorage.getItem("accessToken")
+  const token = getToken()
 
   useEffect(() => {
       if (!token) {
@@ -20,7 +21,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     logout()
-    localStorage.removeItem("accessToken")
+    removeToken()
     navigate({ to: "/login" })
   }
 
