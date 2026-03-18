@@ -8,7 +8,7 @@ const rootRoute = createRootRoute()
 const indexRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/',
-    component: Home,
+    component: Login,
 })
 
 const loginRoute = createRoute({
