@@ -21,14 +21,14 @@ export function ProductList({ page, onPageChange }: ProductListProps) {
   if (error) return <>Erro ao carregar produtos</>
 
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="flex flex-col justify-center items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-1/2 ">
         {data?.products?.map((product: Product) => (
           <Card key={product.id} className="overflow-hidden">
             <img
               src={product.thumbnail}
               alt={product.title}
-              className="w-full h-48 object-cover"
+              className="w-full h-70 object-cover"
             />
             <CardHeader>
               <CardTitle className="flex justify-between items-start">
