@@ -1,7 +1,7 @@
+import { useAuth } from "@/context/AuthContext"
 import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import type { AuthResponse } from "@/types/types"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,6 +28,7 @@ export function LoginForm({
 
   const token = localStorage.getItem("accessToken")
 
+  const { login } = useAuth()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
@@ -55,7 +56,7 @@ export function LoginForm({
     const data: AuthResponse = await response.json()
 
     if (response.ok) {
-      console.log("Login successful: ", data)
+      login(data)
       localStorage.setItem("accessToken", data.accessToken)
       navigate({ to: '/dashboard' })
     } else {
