@@ -4,10 +4,11 @@ import { fetchProductById } from "@/lib/api"
 import { Card, CardContent, CardTitle } from "./ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { ProductDetailSearch } from "@/router"
 
 export function ProductDetail() {
   const navigate = useNavigate()
-  const search = useSearch({from: '/dashboard/product'})
+  const search = useSearch({from: '/dashboard/product'}) as ProductDetailSearch
   const productId = search.id
 
   const { 

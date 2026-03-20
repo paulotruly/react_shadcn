@@ -24,6 +24,13 @@ const dashboardRoute = createRoute({
     component: Dashboard,
 })
 
+export const productDetailSearchSchema = z.object({
+    id: z.string(),
+})
+
+export type ProductDetailSearch = z.infer<typeof productDetailSearchSchema>
+validateSearch: productDetailSearchSchema
+
 const productDetailRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/dashboard/product',
