@@ -1,7 +1,8 @@
-import { createRouter, createBrowserHistory, createRootRoute, createRoute } from '@tanstack/react-router'
-import Home from './Home'
+import { createRouter, createRootRoute, createRoute } from '@tanstack/react-router'
 import Login from './Login'
 import Dashboard from './Dashboard'
+import { ProductDetail } from './components/product-detail'
+import {z} from 'zod'
 
 const rootRoute = createRootRoute()
 
@@ -23,7 +24,21 @@ const dashboardRoute = createRoute({
     component: Dashboard,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, dashboardRoute])
+const productDetailRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/dashboard/product',
+    component: ProductDetail,
+    validateSearch: z.object({
+        id: z.string(),
+    }),
+})
+
+const routeTree = rootRoute.addChildren([
+    indexRoute,      
+    loginRoute,      
+    dashboardRoute,   
+    productDetailRoute, 
+])
 
 const router = createRouter({routeTree})
 

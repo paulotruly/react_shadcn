@@ -10,3 +10,9 @@ export async function fetchProducts(page: number, limit: number = 9) {
     
     return response.json()
 }
+
+export async function fetchProductById(id: string) {
+    const response = await fetch(`${BASE_URL}/products/${id}`)
+    if (!response.ok) throw new Error('Failed to fetch product')
+    return response.json()
+}
