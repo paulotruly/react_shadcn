@@ -1,5 +1,3 @@
-import { getToken, setToken } from "@/lib/cookies"
-import { useAuth } from "@/context/AuthContext"
 import { useNavigate } from "@tanstack/react-router"
 import { useEffect } from "react"
 import type { AuthResponse } from "@/types/types"
@@ -21,64 +19,53 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 
-export function LoginForm({
+export function RegisterForm({
 
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
-  const token = getToken()
-
-  const { login } = useAuth()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (token) {
-      navigate({ to: '/dashboard', replace: true })
+  const cancelRegister = () => {
+      navigate({ to: "/login" })
     }
-  }, [token, navigate])
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const response = await fetch("https://dummyjson.com/auth/login", {
+    const response = await fetch("https://dummyjson.com/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
         username: username,
         password: password,
-        expiresInMins: 30,
       }),
     })
 
     const data: AuthResponse = await response.json()
 
     if (response.ok) {
-      login(data)
-      setToken(data.accessToken)
-      navigate({ to: '/dashboard' })
+      console.log("Registro efetuado com sucesso", data)
     } else {
       console.error("Login failed: ", data)
     }
-  }
-
-  const goToRegister = () => {
-    navigate({to: "/register"})
   }
 
   return (
 
     <div className={cn("flex flex-col justify-center items-center gap-6 bg-gray-600 min-h-screen", className)} {...props}>
       <Card className="w-full max-w-md px-5 py-10">
+        
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardTitle>Create an account</CardTitle>
+          <CardDescription> Descrição aqui </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
@@ -89,31 +76,36 @@ export function LoginForm({
                   onChange={(e) => setUsername(e.target.value)}
                   id="username"
                   type="text"
-                  placeholder="john_doe"
+                  placeholder="Type here"
                   required
                 />
               </Field>
+
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <FieldLabel htmlFor="password"> Password </FieldLabel>
                 <Input
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 id="password"
                 type="password"
+                placeholder="Type here"
+                required />
+            </Field>
+
+            <Field>
+                <FieldLabel htmlFor="confirmPassword"> Confirm password </FieldLabel>
+                <Input
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                id="confirmPassword"
+                type="password"
+                placeholder="Type here"
                 required />
               </Field>
-              <Field>
-                <Button type="submit">Login</Button>
+              <Field className="gap-5">
+                <Button type="submit">Register</Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a onClick={goToRegister}>Sign up</a>
+                  <button onClick={cancelRegister}>Cancelar</button>
                 </FieldDescription>
               </Field>
             </FieldGroup>
@@ -121,7 +113,5 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
-
-
   )
 }

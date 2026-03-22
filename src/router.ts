@@ -3,6 +3,7 @@ import Login from './Login'
 import Dashboard from './Dashboard'
 import { ProductDetail } from './components/product-detail'
 import {z} from 'zod'
+import Register from './Register'
 
 const rootRoute = createRootRoute()
 
@@ -22,6 +23,12 @@ const dashboardRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/dashboard',
     component: Dashboard,
+})
+
+const registerRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/register',
+    component: Register,
 })
 
 export const productDetailSearchSchema = z.object({
@@ -45,6 +52,7 @@ const routeTree = rootRoute.addChildren([
     loginRoute,      
     dashboardRoute,   
     productDetailRoute, 
+    registerRoute,
 ])
 
 const router = createRouter({routeTree})
