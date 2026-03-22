@@ -1,6 +1,9 @@
+import { useForm } from "react-hook-form"
+import { registerSchema } from "@/schemas/register-schema"
+import type { RegisterFormData } from "@/schemas/register-schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { getToken } from "@/lib/cookies"
 import { useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
-import type { AuthResponse } from "@/types/types"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,95 +20,106 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useEffect } from "react"
 
 export function RegisterForm({
-
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-
   const navigate = useNavigate()
+  const token = getToken()
 
-  const cancelRegister = () => {
-      navigate({ to: "/login" })
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema)
+  })
+
+  useEffect(() => {
+    if (token) {
+      navigate({ to: '/dashboard', replace: true })
     }
+  }, [token, navigate])
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
+  // dummyjson não tem registro, então é só pra simular mesmo
+  async function onSubmit(data: RegisterFormData) {
     const response = await fetch("https://dummyjson.com/auth/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-        username: username,
-        password: password,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: data.username,
+        password: data.password,
       }),
     })
 
-    const data: AuthResponse = await response.json()
-
     if (response.ok) {
-      console.log("Registro efetuado com sucesso", data)
+      navigate({ to: "/login" })
     } else {
-      console.error("Login failed: ", data)
+      const errorData = await response.json()
+      console.error("Registration failed:", errorData)
     }
   }
 
-  return (
+  const cancelRegister = () => {
+    navigate({ to: "/login" })
+  }
 
+  return (
     <div className={cn("flex flex-col justify-center items-center gap-6 bg-gray-600 min-h-screen", className)} {...props}>
       <Card className="w-full max-w-md px-5 py-10">
         
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
-          <CardDescription> Descrição aqui </CardDescription>
+          <CardDescription>Create your account to get started</CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  {...register("username")}
                   id="username"
                   type="text"
-                  placeholder="Type here"
-                  required
+                  placeholder="john_doe"
                 />
+                {errors.username && (
+                  <p className="text-sm text-red-500 mt-1">{errors.username.message}</p>
+                )}
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="password"> Password </FieldLabel>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                id="password"
-                type="password"
-                placeholder="Type here"
-                required />
-            </Field>
-
-            <Field>
-                <FieldLabel htmlFor="confirmPassword"> Confirm password </FieldLabel>
-                <Input
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                id="confirmPassword"
-                type="password"
-                placeholder="Type here"
-                required />
+                  {...register("password")}
+                  id="password"
+                  type="password"
+                  placeholder="••••••"
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+                )}
               </Field>
+
+              <Field>
+                <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+                <Input
+                  {...register("confirmPassword")}
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••"
+                />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500 mt-1">{errors.confirmPassword.message}</p>
+                )}
+              </Field>
+
               <Field className="gap-5">
-                <Button type="submit">Register</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Registering..." : "Register"}
+                </Button>
                 <FieldDescription className="text-center">
-                  <button onClick={cancelRegister}>Cancelar</button>
+                  <button type="button" onClick={cancelRegister}>Cancel</button>
                 </FieldDescription>
               </Field>
             </FieldGroup>
