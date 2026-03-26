@@ -1,11 +1,10 @@
-# React + shadcn/ui
-
-Projeto de estudo para aprender a usar shadcn/ui em aplicações React.
+# React + Shadcn
+Projeto de estudo para aprender a usar Shadcn em aplicações React.
 
 ## O que foi aprendido
 
 ### Fundamentos
-- Setup inicial de um projeto React com Vite e shadcn/ui
+- Setup inicial de um projeto React com Vite e Shadcn
 - Estilização com Tailwind CSS e ajustes de CSS
 - Componentes UI customizados (Card, Button, Input, Field, Label, Separator)
 
@@ -36,7 +35,7 @@ Projeto de estudo para aprender a usar shadcn/ui em aplicações React.
 
 - **React 19** + Vite
 - **TypeScript**
-- **Tailwind CSS v4** + shadcn/ui
+- **Tailwind CSS v4** + Shadcn
 - **TanStack Router** - navegação e rotas
 - **TanStack Query** - gerenciamento de dados
 - **React Hook Form** - formulários
